@@ -1,5 +1,3 @@
-import os
-
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -26,13 +24,7 @@ def create_app() -> Flask:
     def health_check():
         return {"status": "ok"}
 
-    auto_create_tables = os.getenv("AUTO_CREATE_TABLES", "1").lower() in {"1", "true", "yes"}
-    if auto_create_tables:
-        with app.app_context():
-            try:
-                db.create_all()
-            except Exception as exc:
-                # Don't crash the web process if DB is temporarily unreachable during boot.
-                app.logger.warning("Skipping db.create_all at startup: %s", exc)
+    with app.app_context():
+        db.create_all()
 
     return app
