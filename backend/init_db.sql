@@ -1,0 +1,13 @@
+CREATE DATABASE IF NOT EXISTS smart_student_admin;
+USE smart_student_admin;
+
+CREATE TABLE IF NOT EXISTS students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(120) NOT NULL,
+    email VARCHAR(120) NOT NULL UNIQUE,
+    department VARCHAR(80) NOT NULL,
+    semester INT NOT NULL,
+    enrollment_year INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
