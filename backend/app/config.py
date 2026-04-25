@@ -18,7 +18,10 @@ def _first_env(*keys: str, default: str = "") -> str:
 
 class Config:
     BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    SQLITE_DB_PATH = os.path.join(BASE_DIR, "instance", "smart_student_admin.db")
+    SQLITE_DB_PATH = os.getenv(
+        "SQLITE_DB_PATH",
+        os.path.join(BASE_DIR, "instance", "smart_student_admin.db"),
+    )
     IS_RENDER = os.getenv("RENDER", "").lower() == "true"
 
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
