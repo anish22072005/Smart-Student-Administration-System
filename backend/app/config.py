@@ -29,6 +29,16 @@ class Config:
     MYSQL_USER = _first_env("MYSQL_USER", "DB_USER", default="root")
     MYSQL_PASSWORD = _first_env("MYSQL_PASSWORD", "DB_PASSWORD", default="")
     MYSQL_DB = _first_env("MYSQL_DB", "DB_NAME", default="smart_student_admin")
+    MYSQL_SSL = os.getenv("MYSQL_SSL", "1" if IS_RENDER else "0").lower() in {
+        "1",
+        "true",
+        "yes",
+    }
+
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 280,
+    }
 
     if DATABASE_URL:
         if DATABASE_URL.startswith("mysql://"):
@@ -48,5 +58,13 @@ class Config:
         )
     else:
         SQLALCHEMY_DATABASE_URI = f"sqlite:///{SQLITE_DB_PATH}"
+
+    if DB_ENGINE == "mysql" and MYSQL_SSL:
+        SQLALCHEMY_ENGINE_OPTIONS["connect_args"] = {
+            "ssl": {},
+            "connect_timeout": 15,
+            "read_timeout": 30,
+            "write_timeout": 30,
+        }
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
